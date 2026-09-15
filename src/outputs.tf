@@ -31,6 +31,6 @@ output "app_id" {
 }
 
 output "workspace_id" {
-  description = "The ID of the Log Analytics workspace."
-  value       = azurerm_log_analytics_workspace.this.id
+  description = "The ID of the Log Analytics workspace backing this instance."
+  value       = azurerm_application_insights.this.workspace_id
 }
