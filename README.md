@@ -1,7 +1,4 @@
----
-title: Terraform Module for Azure Application Insights
-description: Provision Azure Application Insights with a caller-owned Log Analytics workspace
----
+# Terraform Module: Azure Application Insights
 
 Provisions an [Azure Application Insights](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights) instance against a caller-supplied [Log Analytics workspace](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_workspace).
 
