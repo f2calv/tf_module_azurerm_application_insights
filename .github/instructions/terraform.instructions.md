@@ -15,7 +15,7 @@ This repository publishes a single reusable module under `src/`, consumed over a
 
 ## Versions
 
-- Declare a `terraform {}` block in `versions.tf` with **permissive lower bounds**: `required_version` for the oldest Terraform the module's syntax needs, and a `required_providers` entry per provider it uses, constrained with `>=` on the supported major.
+- Declare a `terraform {}` block in `versions.tf` with `required_version` set to the oldest Terraform the module's syntax needs. Constrain each provider to the current supported major with permissive lower and exclusive upper bounds, such as `>= 5.0, < 6.0`.
 - **Never pin an exact version here.** A child module pinning `= 4.81.0` cannot be composed with a caller or a sibling module that needs anything else. Exact pins and the dependency lock file belong to the root module.
 - **Do not declare `provider` blocks.** Providers are inherited from the caller, which may pass a specific alias via `providers = { ... }`.
 
@@ -65,15 +65,28 @@ This repository publishes a single reusable module under `src/`, consumed over a
 - **Sensitive outputs** are marked `sensitive = true` so they are redacted from plan output and CI logs.
 - Terraform writes output values into the caller's state, so a sensitive output is only as protected as their state backend. Keep the surface minimal — expose an id or an endpoint rather than a raw key wherever the caller can look the secret up itself.
 
+## Forward-Only Maintenance
+
+- Maintain only the current supported interface. Deprecated or retired provider arguments, outputs, SKUs, APIs and platform features have no place in the module.
+- Remove obsolete inputs and outputs instead of retaining aliases, compatibility shims, no-op variables or commented legacy implementations.
+- Prefer a clean breaking release over preserving outdated behavior. Update the interface, README and release metadata together, and let consumers remain on an older immutable module tag until they migrate.
+- When an upstream platform announces retirement, adapt before the retirement date and remove the retired option from the module interface.
+
 ## Breaking Changes
 
 Adding a required variable, renaming a resource, or removing a resource from a module is a breaking change for every consumer.
 
-- Renaming a resource makes Terraform plan a destroy and create against the caller's existing infrastructure. Ship a `moved` block in the same change so the rename is absorbed automatically.
-- Removing a resource the caller still owns elsewhere needs a `removed` block with `lifecycle { destroy = false }`, so it is forgotten from state rather than destroyed. Without one, every consumer has to run `terraform state rm` by hand.
-- Tag a release and expect callers to pin to it. A caller tracking a branch ref inherits breaking changes silently, on their next `init`.
+- Publish breaking changes as a new major release without in-module compatibility shims. Consumers migrate explicitly when they choose to update their pinned module tag.
+- Document any state migration command consumers must run before applying the new major release.
+- Tag a release and require callers to pin to it. A caller tracking a branch ref inherits breaking changes silently on their next `init`.
 - Record the change in the commit message with a `BREAKING CHANGE:` footer.
+
+## Release References
+
+- Keep the module source example in `README.md` pinned to the immutable tag expected from the current change, not `main` or the previous release.
+- Before a pull request is merged, derive the expected final tag from the release workflow's numeric major, minor and patch outputs, excluding any feature-branch pre-release suffix, and update the README in the same change.
+- Treat a mismatch between the README source ref and the expected final release tag as a CI failure.
 
 ## Dead Code
 
-Commented-out blocks accumulate fast in Terraform. Delete superseded configuration outright; Git holds the history. Where a block is intentionally dormant rather than dead, keep it commented but prefix it with a one-line reason and, where known, the condition for re-enabling it.
+Delete superseded and dormant configuration outright; Git holds the history. Do not retain commented-out blocks for possible future use.
