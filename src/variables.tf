@@ -17,7 +17,12 @@ variable "tags" {
 
 variable "appinsights_name" {
   type        = string
-  description = "Name of the Application Insights instance (also used for the Log Analytics workspace)."
+  description = "Name of the Application Insights instance."
+}
+
+variable "workspace_id" {
+  type        = string
+  description = "Resource ID of the Log Analytics workspace backing this instance."
 }
 
 variable "daily_data_cap_in_gb" {
@@ -28,6 +33,6 @@ variable "daily_data_cap_in_gb" {
 
 variable "retention_in_days" {
   type        = number
-  description = "Retention period in days for both Application Insights and Log Analytics."
+  description = "Retention period in days for Application Insights."
   default     = 30
 }
