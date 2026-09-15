@@ -30,3 +30,10 @@ applyTo: '**'
 - Pull requests must run Terraform formatting, backend-free initialization and validation without Azure credentials.
 - Treat a mismatch between the GitVersion result and the README module source tag as a failed check.
 - Require the validation job in the `main` branch ruleset before allowing a pull request to merge.
+
+## Dependency Automation
+
+- Configure Dependabot's `terraform` ecosystem for `src/` so provider and module version constraints are monitored.
+- Keep dependency ranges in child modules broad within the current supported provider major. Do not commit a dependency lock file for a reusable child module.
+- Configure Dependabot's `helm` ecosystem in repositories containing Helm charts, with one entry per chart directory or a `directories` pattern covering every `Chart.yaml`.
+- Validate automated provider-major and chart updates through the same pull request checks as manually authored changes.
