@@ -13,12 +13,6 @@ output "location" {
   value       = azurerm_application_insights.this.location
 }
 
-output "instrumentation_key" {
-  description = "The instrumentation key of the Application Insights instance (deprecated — use connection_string instead)."
-  value       = azurerm_application_insights.this.instrumentation_key
-  sensitive   = true
-}
-
 output "connection_string" {
   description = "The connection string of the Application Insights instance."
   value       = azurerm_application_insights.this.connection_string
