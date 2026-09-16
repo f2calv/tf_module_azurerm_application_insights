@@ -12,6 +12,13 @@ applyTo: '**/*.md'
 - **Only document what exists**: Do not describe module behavior until the implementation and validation are in place.
 - **Placeholders in examples**: Use synthetic values. Never include real credentials, tokens, connection strings, endpoints, hostnames, resource ids or personal data.
 
+## Terraform Reference
+
+- The root `README.md` must contain terraform-docs-generated Requirements, Providers, Resources, Inputs, and Outputs sections.
+- Regenerate the Terraform reference after changing resources, variables, outputs, provider requirements, or Terraform version constraints.
+- Commit the generated README output in the same change as the Terraform interface change.
+- Configure pre-commit and CI to run terraform-docs and fail when the committed generated output has drifted.
+
 ### Structure and Accessibility
 
 - Use exactly one `# H1` as the first content line, naming the module.
