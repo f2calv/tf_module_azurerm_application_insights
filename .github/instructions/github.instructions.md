@@ -11,6 +11,10 @@ applyTo: '**'
 - Prefer a clean versioned release over compatibility code. Consumers remain on an older immutable tag until they are ready to migrate.
 - Remove commented-out implementations and speculative placeholders. Git retains history.
 
+## Branch Naming
+
+- Name branches `<github_username>/yyyy-MM-concise-name`, using the branch creation year and month followed by concise lowercase kebab-case wording.
+
 ## Semantic Versioning
 
 - Before adding a `+semver:` directive, inspect every commit between the merge base with `origin/main` and `HEAD`.
@@ -22,12 +26,15 @@ applyTo: '**'
 ## Release References
 
 - Keep the module source example in `README.md` pinned to the immutable tag that GitVersion predicts for the final branch.
+- Use plain `X.Y.Z` release tags for reusable Terraform modules. Reserve `v`-prefixed tags for GitHub Actions.
+- Main-branch release tags must not include CI or pre-release suffixes.
 - Exclude feature-branch prerelease labels from the README tag.
 - Recalculate the expected tag after the final commit. Do not assume that an earlier calculation remains valid.
 
 ## Continuous Integration
 
 - Pull requests must run Terraform formatting, backend-free initialization and validation without Azure credentials.
+- Reusable release-versioning workflow calls for Terraform modules must explicitly set `tag-prefix: ''` and `move-major-tag: false`.
 - Treat a mismatch between the GitVersion result and the README module source tag as a failed check.
 - Require the validation job in the `main` branch ruleset before allowing a pull request to merge.
 
