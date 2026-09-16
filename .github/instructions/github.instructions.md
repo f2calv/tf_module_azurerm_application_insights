@@ -15,6 +15,12 @@ applyTo: '**'
 
 - Name branches `<github_username>/yyyy-MM-concise-name`, using the branch creation year and month followed by concise lowercase kebab-case wording.
 
+## Pull Requests
+
+- Inspect the repository's available labels when creating a pull request and apply every label that accurately describes the change.
+- Assign a new pull request to the currently authenticated GitHub user. Resolve the login dynamically from the GitHub client or API; never hardcode a username in instructions or automation.
+- Verify the pull request's base branch, head branch, labels and assignee after creation.
+
 ## Semantic Versioning
 
 - Before adding a `+semver:` directive, inspect every commit between the merge base with `origin/main` and `HEAD`.
