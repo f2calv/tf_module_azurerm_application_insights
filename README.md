@@ -18,7 +18,7 @@ graph LR
 
 ```hcl
 module "appinsights" {
-  source              = "git::https://github.com/f2calv/tf_module_azurerm_application_insights.git//src?ref=0.3.1"
+  source              = "git::https://github.com/f2calv/tf_module_azurerm_application_insights.git//src?ref=0.3.2"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   appinsights_name    = "my-app-insights"
