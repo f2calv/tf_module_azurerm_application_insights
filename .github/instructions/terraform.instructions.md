@@ -54,8 +54,8 @@ This repository publishes a single reusable module under `src/`, consumed over a
 - **Registry comment-link above each resource block**, pointing at the provider documentation for that resource type:
 
   ```hcl
-  # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights
-  resource "azurerm_application_insights" "this" {
+  # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/<resource_type>
+  resource "azurerm_<resource_type>" "this" {
   ```
 
 - **Accept ids rather than creating shared dependencies.** A resource that could reasonably be shared by several callers — a workspace, a resource group, a vnet — is passed in by id, not created here. Creating it inside the module hands its lifecycle to whichever caller happened to instantiate the module first.
@@ -74,6 +74,17 @@ This repository publishes a single reusable module under `src/`, consumed over a
 - **No secrets in the module.** Never hardcode a key, connection string or credential, and never give a variable a secret default.
 - **Sensitive outputs** are marked `sensitive = true` so they are redacted from plan output and CI logs.
 - Terraform writes output values into the caller's state, so a sensitive output is only as protected as their state backend. Keep the surface minimal — expose an id or an endpoint rather than a raw key wherever the caller can look the secret up itself.
+
+## Continuous Integration
+
+- Pull requests must run `terraform fmt`, a backend-free `terraform init` and `terraform validate`, and all three must pass without Azure credentials. The module declares no backend, so `-backend=false` is sufficient.
+- Require `validate / terraform validate` as a status check on `main`, alongside the repository-wide lint and versioning checks.
+
+## Dependency Automation
+
+- Configure Dependabot's `terraform` ecosystem for `src/` so provider and module version constraints are monitored.
+- Keep provider ranges broad within the current supported major, and do not commit `.terraform.lock.hcl`. A reusable child module must not pin the caller's provider build; the lock file belongs to the root module.
+- Validate automated provider-major updates through the same pull request checks as manually authored changes.
 
 ## Forward-Only Maintenance
 
